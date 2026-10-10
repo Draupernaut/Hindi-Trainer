@@ -1,4 +1,4 @@
-const CACHE = 'hindi-trainer-v3';
+const CACHE = 'hindi-trainer-v4';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './db.js', './srs.js',
   './data/content.js', './manifest.webmanifest', './icons/icon.svg',
