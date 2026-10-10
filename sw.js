@@ -1,7 +1,8 @@
-const CACHE = 'hindi-trainer-v1';
+const CACHE = 'hindi-trainer-v2';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './db.js', './srs.js',
-  './data/content.js', './manifest.webmanifest', './icons/icon.svg'
+  './data/content.js', './manifest.webmanifest', './icons/icon.svg',
+  './icons/icon-180.png', './icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
