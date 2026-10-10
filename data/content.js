@@ -6,7 +6,7 @@ export const course = {
     {
       id: 'L01',
       title: 'Namaste – erste Sätze',
-      description: 'Begrüßen, sich vorstellen und verstehen, warum Hindi oft kein „ist“ braucht, wo Deutsch eines erwartet.',
+      description: 'Begrüßen, sich vorstellen und verstehen, wie „sein“ im Hindi funktioniert und warum das Verb meist am Satzende steht.',
       grammar: [
         { heading: 'Personalpronomen', text: 'मैं (maĩ) bedeutet „ich“, आप (āp) ist das höfliche „Sie/du“, तुम (tum) ist ein vertrautes „du/ihr“. Für den Anfang nutzen wir meist आप.' },
         { heading: '„sein“: होना (honā)', text: 'Im Präsens richtet sich die Form nach der Person. Besonders häufig sind हूँ (hū̃) = „bin“, हैं (haĩ) = höfliches/plurales „sind“ und है (hai) = „ist“.' },
