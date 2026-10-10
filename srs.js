@@ -13,7 +13,8 @@ export function freshCardState() {
 }
 
 export function isDue(state, now = Date.now()) {
-  return !state || state.phase === 'new' || Number(state.due || 0) <= now;
+  if (!state) return false;
+  return state.phase === 'new' || Number(state.due || 0) <= now;
 }
 
 export function scheduleReview(previous, rating, now = Date.now()) {
