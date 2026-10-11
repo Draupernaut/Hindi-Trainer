@@ -1,6 +1,6 @@
-const CACHE = 'hindi-trainer-v5';
+const CACHE = 'hindi-trainer-v6';
 const ASSETS = [
-  './', './index.html', './styles.css', './course.css', './app.js', './db.js', './srs.js',
+  './', './index.html', './styles.css', './course.css', './app.js', './quality.js', './db.js', './srs.js',
   './data/content.js', './data/expanded-content.js', './data/curriculum.js', './data/units/u3.js', './data/units/u4.js',
   './data/units/u5.js', './data/units/u6.js', './manifest.webmanifest', './icons/icon.svg',
   './icons/icon-180.png', './icons/icon-512.png'
