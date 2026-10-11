@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#6b3fa0"/>
-  <circle cx="256" cy="256" r="168" fill="#fff" opacity=".12"/>
-  <text x="256" y="282" text-anchor="middle" font-family="system-ui, sans-serif" font-size="198" font-weight="700" fill="#fff">ह</text>
-  <path d="M150 350h212" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".85"/>
+  <defs>
+    <clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="512" height="190" y="0" fill="#d96b16"/>
+    <rect width="512" height="132" y="190" fill="#fffaf2"/>
+    <rect width="512" height="190" y="322" fill="#138808"/>
+  </g>
+  <circle cx="256" cy="256" r="116" fill="#fffefb" stroke="#0a4d8c" stroke-width="14"/>
+  <circle cx="256" cy="256" r="91" fill="none" stroke="#0a4d8c" stroke-width="5" opacity=".45"/>
+  <text x="256" y="293" text-anchor="middle" font-family="system-ui, sans-serif" font-size="184" font-weight="800" fill="#0a4d8c">ह</text>
 </svg>
