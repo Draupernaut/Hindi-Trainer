@@ -2,7 +2,7 @@
 
 ## Projektziel
 
-Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgruppe ist eine deutschsprachige Lernerin bzw. ein deutschsprachiger Lerner, die/der strukturiert über Grammatik, konkrete Textbeispiele und Spaced Repetition lernt.
+Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgruppe ist eine deutschsprachige Lernerin bzw. ein deutschsprachiger Lerner, die/der strukturiert über Grammatik, konkrete Textbeispiele, aktive Schriftpraxis und Spaced Repetition lernt.
 
 ## Unverhandelbare Architekturregeln
 
@@ -16,6 +16,8 @@ Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgrup
 8. Barrierearm arbeiten: semantische Buttons, lesbarer Kontrast, `aria-label` wo Icons allein stehen.
 9. Hindi immer in Devanagari speichern. Transliteration separat halten und abschaltbar anzeigen.
 10. Sprachinhalte nicht still „kreativ verbessern“, wenn grammatische Unsicherheit besteht. Bei größeren Content-Erweiterungen Grammatik und natürliche Formulierungen fachlich prüfen.
+11. **Schrifttrainer isoliert halten.** `script-trainer.js` und `script-trainer.css` erweitern die App, dürfen aber Kurs-/SRS-Zustände nicht mutieren. Schriftfortschritt liegt ausschließlich unter `scriptProgress` in IndexedDB.
+12. Die Canvas-Formprüfung ist nur heuristisch. Sie darf niemals als zuverlässige OCR oder verbindliche Strichreihenfolgenprüfung dargestellt werden.
 
 ## Datenmodell
 
@@ -45,6 +47,18 @@ Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgrup
 
 SRS-Zustand liegt getrennt in IndexedDB unter `cardStates[card.id]`.
 
+### Schrifttrainer
+
+`script-trainer.js` enthält ein eigenes, stabiles Glyphen-Curriculum mit IDs für Vokale, Konsonanten, Matras und häufige Verbindungen.
+
+Schriftfortschritt liegt separat unter `scriptProgress` und kann enthalten:
+- `seen`
+- `recogniseAttempts` / `recogniseCorrect`
+- `traceAttempts` / `traceBest` / `tracePassed`
+- `writeAttempts` / `writeBest` / `writePassed`
+
+IDs bestehender Schriftzeichen nicht ohne Migration ändern.
+
 ## SRS-Regeln
 
 `srs.js` ist bewusst klein und verständlich. Änderungen am Algorithmus müssen:
@@ -60,13 +74,17 @@ SRS-Zustand liegt getrennt in IndexedDB unter `cardStates[card.id]`.
 - Unterschiede zwischen deutscher und Hindi-Struktur explizit erklären.
 - Genus-/Kongruenzformen sichtbar machen, ohne Lernende mit Vollständigkeit zu überfahren.
 - Transliteration ist Stütze, nicht Ziel; Devanagari bleibt primär.
+- Schrifttraining soll Erkennen und aktive Produktion kombinieren.
+- Keine Strichreihenfolge behaupten, wenn sie nicht fachlich verifiziert ist.
 
 ## Vor jedem Push prüfen
 
-- `node --check app.js db.js srs.js data/content.js data/expanded-content.js data/curriculum.js data/units/*.js sw.js`
+- `node --check app.js quality.js script-trainer.js db.js srs.js data/content.js data/expanded-content.js data/curriculum.js data/units/*.js sw.js`
 - App über HTTP öffnen.
-- Navigation: Heute → Kurs → Lektion → Wiederholen → Fortschritt → Einstellungen.
+- Navigation: Heute → Kurs → Lektion → Wiederholen → Fortschritt → Schrift → Einstellungen.
+- Schrifttrainer: Zeichen wählen → Erkennen → Nachzeichnen → frei schreiben → Seite neu laden → Fortschritt bleibt.
+- Touch-/Pointer-Eingabe auf iPhone/iPad prüfen; Scrollen darf während des Zeichnens nicht übernehmen.
 - Eine Karte bewerten, Seite neu laden, prüfen ob SRS-Zustand bleibt.
-- Backup exportieren und wieder importieren.
+- Backup exportieren und wieder importieren; `scriptProgress` muss enthalten sein.
 - PWA-Pfade dürfen den GitHub-Pages-Unterpfad nicht verlassen.
 - Service-Worker-Cache-Version erhöhen, wenn gecachte Assets wesentlich geändert werden.
