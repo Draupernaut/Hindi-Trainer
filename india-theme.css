@@ -1,0 +1,157 @@
+/* India-inspired visual quality pass
+   Saffron + warm ivory + India green + Ashoka blue.
+   Intentionally restrained: flag colours are accents, not large flat blocks. */
+:root {
+  --bg: #fffaf2;
+  --surface: #fffefb;
+  --surface-2: #fff1df;
+  --text: #18231c;
+  --muted: #687168;
+  --primary: #d96b16;
+  --primary-dark: #a84808;
+  --accent: #0a3d91;
+  --success: #138808;
+  --danger: #b33a3a;
+  --border: #eadfce;
+  --saffron: #ff9933;
+  --india-green: #138808;
+  --chakra-blue: #0a3d91;
+  --ivory: #fffaf2;
+  --shadow: 0 12px 34px rgba(91, 62, 30, .09);
+}
+
+html, body { background: var(--bg); }
+.topbar {
+  background: color-mix(in srgb, var(--ivory) 91%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--border) 80%, transparent);
+}
+.logo {
+  background: linear-gradient(150deg, var(--saffron), #e97b19);
+  box-shadow: 0 5px 14px rgba(217,107,22,.22);
+}
+.top-action:focus-visible, .btn:focus-visible, .nav-btn:focus-visible,
+.option:focus-visible, .speak:focus-visible, .quality-input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--chakra-blue) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,.15) 0 3px, transparent 4px),
+    linear-gradient(138deg, #d96512 0%, #ef8621 58%, #f5a44c 100%);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -34px;
+  bottom: -54px;
+  width: 150px;
+  height: 150px;
+  border: 2px solid rgba(10,61,145,.16);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 24px rgba(255,255,255,.035);
+  pointer-events: none;
+}
+.hero-stat { background: rgba(255,255,255,.16); }
+
+.action-card { transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+@media (hover:hover) {
+  .action-card:hover, .lesson:hover { transform: translateY(-2px); border-color: #ddc8aa; box-shadow: 0 15px 36px rgba(91,62,30,.12); }
+}
+.action-icon { background: #fff0dc; color: var(--primary-dark); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #ed8121);
+  box-shadow: 0 5px 14px rgba(217,107,22,.17);
+}
+.btn-secondary { background: #eaf4e8; color: #126a13; }
+.btn-ghost { color: var(--chakra-blue); border-color: #cad6eb; }
+
+.progress { background: #f0e6d7; }
+.progress > span { background: linear-gradient(90deg, var(--saffron), var(--india-green)); }
+.lesson-number { background: #fff0dc; color: var(--primary-dark); }
+.pill { background: #f7efe3; color: #625a4f; }
+.pill.done { background: #e8f5e6; color: #0c6e0d; }
+.rule-box { background: #fff4e5; border-left-color: var(--saffron); }
+.rule-box strong { color: #983f08; }
+.speak { background: #edf2fb; color: var(--chakra-blue); }
+.speaker, .eyebrow, .unit-head .eyebrow, .reading-head .eyebrow { color: var(--chakra-blue) !important; }
+
+.option { background: var(--surface); }
+.option.correct { border-color: #55a652; background: #edf8ec; }
+.option.wrong { border-color: #d27a75; background: #fff0ee; }
+.rate-btn[data-rate='again'] { border-bottom: 3px solid #b94b42; }
+.rate-btn[data-rate='hard'] { border-bottom: 3px solid var(--saffron); }
+.rate-btn[data-rate='good'] { border-bottom: 3px solid var(--india-green); }
+.rate-btn[data-rate='easy'] { border-bottom: 3px solid var(--chakra-blue); }
+
+.toggle.on { background: var(--india-green); }
+.bottom-nav { background: color-mix(in srgb, #fffefb 94%, transparent); }
+.nav-btn.active { color: var(--chakra-blue); background: #eef3fb; }
+.install-banner { background: #fff3df; border-color: #f0d0a0; }
+.toast { background: #163421; }
+
+.unit-section {
+  padding: 16px 14px 18px;
+  margin-left: -6px;
+  margin-right: -6px;
+  border: 1px solid #eee2d1;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,.57), rgba(255,248,237,.64));
+}
+.unit-progress { background: #eaf4e8; color: #116f12; }
+.reading-card { background: linear-gradient(180deg, #fffefb, #fff8ec); }
+
+/* Active-reading enhancement */
+.reading-translation.quality-hidden {
+  position: relative;
+  color: transparent;
+  user-select: none;
+  min-height: 48px;
+  border-radius: 12px;
+  background: repeating-linear-gradient(135deg, #f5eee4, #f5eee4 8px, #faf6ef 8px, #faf6ef 16px);
+}
+.reading-translation.quality-hidden::after {
+  content: 'Erst selbst verstehen – dann aufdecken';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+.quality-reveal-reading { margin-top: 10px; }
+
+/* Writing exercise */
+.quality-section {
+  border: 1px solid #d9e0eb;
+  background: linear-gradient(155deg, #fffefb 0%, #f5f8fd 100%);
+}
+.quality-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.quality-kicker { color: var(--chakra-blue); text-transform:uppercase; letter-spacing:.055em; font-size:11px; font-weight:800; }
+.quality-badge { flex:0 0 auto; padding:6px 9px; border-radius:99px; background:#eaf4e8; color:#116f12; font-size:11px; font-weight:800; }
+.quality-prompt { padding:14px; border-radius:15px; background:#fff7e9; border-left:4px solid var(--saffron); margin:10px 0 12px; }
+.quality-prompt strong { display:block; font-size:17px; line-height:1.4; }
+.quality-prompt span { display:block; color:var(--muted); font-size:12px; margin-top:5px; }
+.quality-input {
+  width:100%; min-height:52px; border:1px solid #cfc8bb; border-radius:14px;
+  padding:12px 13px; background:#fff; color:var(--text); font-size:18px;
+  font-family:"Noto Sans Devanagari","Kohinoor Devanagari",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+}
+.quality-input::placeholder { color:#9a9f99; font-size:14px; }
+.quality-actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:10px; }
+.quality-actions .btn { flex:1 1 130px; }
+.quality-feedback { margin-top:12px; padding:12px 13px; border-radius:14px; line-height:1.5; font-size:13px; }
+.quality-feedback.correct { background:#e9f7e8; border:1px solid #acd2a8; }
+.quality-feedback.close { background:#fff3df; border:1px solid #ecc98d; }
+.quality-feedback.solution { background:#edf2fb; border:1px solid #c6d3e9; }
+.quality-feedback .hindi { font-size:21px; margin-top:5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; }
+}
