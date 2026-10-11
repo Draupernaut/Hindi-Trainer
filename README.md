@@ -4,7 +4,9 @@ Eine statische, installierbare Progressive Web App (PWA) für strukturiertes Hin
 
 ## Funktionen
 
-- 8 strukturierte Lektionen mit Grammatik, Beispielsätzen und Dialogen
+- 24 strukturierte Lektionen in 6 Modulen mit Grammatik, Beispielsätzen, Lesetexten und Dialogen
+- 240 SRS-Karten mit stabilen IDs (bestehender Lernstand bleibt updatefest)
+- eigenes Devanagari-Lesemodul mit Vokalen, Matras, Konsonanten und Zeichen
 - Deutsch ↔ Hindi mit Devanagari und optionaler Umschrift
 - Spaced Repetition mit **Nochmal / Schwer / Gut / Leicht**
 - lokaler Lernstand in IndexedDB
@@ -33,11 +35,15 @@ Danach `http://localhost:8000` öffnen.
 ## Architektur
 
 - `index.html` – App-Shell
-- `styles.css` – responsive iOS-orientierte Oberfläche
+- `styles.css` – responsive iOS-orientierte Basisoberfläche
+- `course.css` – Modul- und Lesetextdarstellung
 - `app.js` – Navigation, Rendering, Lernfluss, Backup, TTS
 - `db.js` – IndexedDB-Abstraktion
 - `srs.js` – SRS-Planung
-- `data/content.js` – Lektionen und Karten
+- `data/content.js` – stabiler Basiskurs L01–L08
+- `data/expanded-content.js` – rückwärtskompatible Zusammenführung von Basis + Erweiterung
+- `data/curriculum.js` – Module, Alt-Lesetexte und Kursaggregation
+- `data/units/u3.js` bis `u6.js` – große A1-Erweiterungsmodule
 - `sw.js` – Offline-Cache
 - `manifest.webmanifest` – PWA-Metadaten
 - `CLAUDE.md` – Arbeitsregeln für Claude Code
