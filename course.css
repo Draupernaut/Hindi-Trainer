@@ -1,0 +1,14 @@
+/* Course modules & reading texts */
+.unit-section { margin: 26px 0 32px; }
+.unit-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 0 2px 12px; }
+.unit-head h3 { margin: 3px 0 4px; font-size: 21px; }
+.unit-head p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.unit-head .eyebrow { color: var(--primary); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.unit-progress { flex: 0 0 auto; min-width: 48px; text-align: center; padding: 7px 10px; border-radius: 99px; background: var(--surface-2); color: var(--primary-dark); font-size: 12px; font-weight: 800; }
+.reading-card { background: linear-gradient(180deg, #fff, #fbf8fd); }
+.reading-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px; }
+.reading-head h3 { margin: 3px 0 0; }
+.reading-head .eyebrow { color: var(--primary); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.reading-hindi { font-size: 24px; line-height: 1.75; }
+.reading-translit { margin-top: 10px; line-height: 1.55; }
+.reading-translation { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--border); color: var(--muted); line-height: 1.55; font-size: 13px; }

@@ -1,4 +1,4 @@
-import { course, cards } from './data/content.js';
+import { course, cards } from './data/expanded-content.js';
 import { dbGet, dbSet, dbExport, dbImport } from './db.js';
 import { freshCardState, isDue, scheduleReview, intervalPreview } from './srs.js';
 
@@ -46,7 +46,7 @@ function layout(content, options = {}) {
 }
 
 function dueCards() {
-  return cards.filter(card => isDue(state.cardStates[card.id]));
+  return cards.filter(card => state.cardStates[card.id] && isDue(state.cardStates[card.id]));
 }
 
 function completedCount() {
@@ -106,17 +106,27 @@ function renderHome() {
 }
 
 function renderCourse() {
-  const list = course.lessons.map((lesson, i) => {
-    const done = !!state.progress[lesson.id]?.completed;
-    const lessonCards = cards.filter(c => c.lessonId === lesson.id);
-    const studied = lessonCards.filter(c => state.cardStates[c.id]?.repetitions > 0).length;
-    return `<article class="card lesson" data-lesson="${lesson.id}">
-      <div class="lesson-head"><div class="lesson-number">${i+1}</div><div><h3>${esc(lesson.title)}</h3><p>${esc(lesson.description)}</p></div></div>
-      <div class="progress"><span style="width:${percent(studied, lessonCards.length)}%"></span></div>
-      <div class="lesson-meta"><span class="pill ${done?'done':''}">${done?'✓ abgeschlossen':'Grammatik + Text'}</span><span class="pill">${lessonCards.length} Karten</span></div>
-    </article>`;
+  const units = course.units?.length ? course.units : [{ id: 'all', title: 'Kurs', subtitle: '', lessonIds: course.lessons.map(l => l.id) }];
+  const sections = units.map((unit, unitIndex) => {
+    const unitLessons = unit.lessonIds.map(id => course.lessons.find(l => l.id === id)).filter(Boolean);
+    const doneInUnit = unitLessons.filter(l => state.progress[l.id]?.completed).length;
+    const lessonList = unitLessons.map(lesson => {
+      const i = course.lessons.findIndex(l => l.id === lesson.id);
+      const done = !!state.progress[lesson.id]?.completed;
+      const lessonCards = cards.filter(c => c.lessonId === lesson.id);
+      const studied = lessonCards.filter(c => state.cardStates[c.id]?.repetitions > 0).length;
+      return `<article class="card lesson" data-lesson="${lesson.id}">
+        <div class="lesson-head"><div class="lesson-number">${i+1}</div><div><h3>${esc(lesson.title)}</h3><p>${esc(lesson.description)}</p></div></div>
+        <div class="progress"><span style="width:${percent(studied, lessonCards.length)}%"></span></div>
+        <div class="lesson-meta"><span class="pill ${done?'done':''}">${done?'✓ abgeschlossen':'Grammatik + Lesen'}</span><span class="pill">${lessonCards.length} Karten</span></div>
+      </article>`;
+    }).join('');
+    return `<section class="unit-section">
+      <div class="unit-head"><div><div class="eyebrow">Modul ${unitIndex + 1}</div><h3>${esc(unit.title)}</h3><p>${esc(unit.subtitle)}</p></div><span class="unit-progress">${doneInUnit}/${unitLessons.length}</span></div>
+      <div class="lesson-list">${lessonList}</div>
+    </section>`;
   }).join('');
-  layout(`<div class="detail-head"><div class="eyebrow">8 strukturierte Einheiten</div><h2>${course.title}</h2><p>${course.subtitle}. Jede Lektion verbindet Regelverständnis, Beispiele, Dialog und SRS-Wortschatz.</p></div><div class="lesson-list">${list}</div>`);
+  layout(`<div class="detail-head"><div class="eyebrow">${course.lessons.length} Lektionen · ${units.length} Module</div><h2>${course.title}</h2><p>${course.subtitle}. Jede Lektion verbindet Regelverständnis, Beispiele, Lesetext, Dialog und SRS-Wortschatz.</p></div>${sections}`);
 }
 
 function adjustedExample(example) {
@@ -126,7 +136,15 @@ function adjustedExample(example) {
     ['मैं सुबह चाय पीती हूँ।','मैं सुबह चाय पीता हूँ।'],['maĩ subah cāy pītī hū̃.','maĩ subah cāy pītā hū̃.'],
     ['मैं जर्मनी से आती हूँ।','मैं जर्मनी से आता हूँ।'],['maĩ Jarmanī se ātī hū̃.','maĩ Jarmanī se ātā hū̃.'],
     ['मैं यह लूँगी।','मैं यह लूँगा।'],['maĩ yah lū̃gī.','maĩ yah lū̃gā.'],
-    ['कल मैं जयपुर जाऊँगी।','कल मैं जयपुर जाऊँगा।'],['kal maĩ Jaypur jāū̃gī.','kal maĩ Jaypur jāū̃gā.']
+    ['कल मैं जयपुर जाऊँगी।','कल मैं जयपुर जाऊँगा।'],['kal maĩ Jaypur jāū̃gī.','kal maĩ Jaypur jāū̃gā.'],
+    ['मैं तीस साल की हूँ।','मैं तीस साल का हूँ।'],['maĩ tīs sāl kī hū̃.','maĩ tīs sāl kā hū̃.'],
+    ['मैं अभी हिंदी पढ़ रही हूँ।','मैं अभी हिंदी पढ़ रहा हूँ।'],['maĩ abhī hindī paṛh rahī hū̃.','maĩ abhī hindī paṛh rahā hū̃.'],
+    ['मैं कल घर पर थी।','मैं कल घर पर था।'],['maĩ kal ghar par thī.','maĩ kal ghar par thā.'],
+    ['मैं पहले दिल्ली में रहती थी।','मैं पहले दिल्ली में रहता था।'],['maĩ pahle Dillī mẽ rahtī thī.','maĩ pahle Dillī mẽ rahtā thā.'],
+    ['मैं कल बाज़ार जाऊँगी।','मैं कल बाज़ार जाऊँगा।'],['maĩ kal bāzār jāū̃gī.','maĩ kal bāzār jāū̃gā.'],
+    ['अगले साल मैं भारत जाऊँगी।','अगले साल मैं भारत जाऊँगा।'],['agle sāl maĩ Bhārat jāū̃gī.','agle sāl maĩ Bhārat jāū̃gā.'],
+    ['मैं हिंदी पढ़ सकती हूँ।','मैं हिंदी पढ़ सकता हूँ।'],['maĩ hindī paṛh saktī hū̃.','maĩ hindī paṛh saktā hū̃.'],
+    ['घर जाकर मैं आराम करूँगी।','घर जाकर मैं आराम करूँगा।'],['ghar jākar maĩ ārām karū̃gī.','ghar jākar maĩ ārām karū̃gā.']
   ]);
   return example.map(x => swaps.get(x) || x);
 }
@@ -137,23 +155,27 @@ function renderLesson(id) {
   state.lessonId = id;
   const grammar = lesson.grammar.map(g => `<div class="rule-box"><strong>${esc(g.heading)}</strong><div style="margin-top:5px;line-height:1.55">${esc(g.text)}</div></div>`).join('');
   const examples = lesson.examples.map(adjustedExample).map(([de,hi,tr,note]) => `<div class="example"><div class="example-top"><div><div class="example-de">${esc(de)}</div><div class="hindi">${esc(hi)}</div>${state.settings.transliteration ? `<div class="translit">${esc(tr)}</div>`:''}<div class="note">${esc(note)}</div></div><button class="speak" data-speak="${esc(hi)}" aria-label="Hindi vorlesen">🔊</button></div></div>`).join('');
+  const reading = lesson.reading ? `<section class="card content-block reading-card"><div class="reading-head"><div><div class="eyebrow">Mini-Lesetext</div><h3>${esc(lesson.reading.title)}</h3></div><button class="speak" data-speak="${esc(lesson.reading.hindi)}" aria-label="Lesetext vorlesen">🔊</button></div><div class="hindi reading-hindi">${esc(lesson.reading.hindi)}</div>${state.settings.transliteration?`<div class="translit reading-translit">${esc(lesson.reading.transliteration)}</div>`:''}<div class="reading-translation">${esc(lesson.reading.german)}</div></section>` : '';
   const dialog = lesson.dialog.map(([speaker,hi,tr,de]) => `<div class="dialog-line"><div class="speaker">${esc(speaker)}</div><div class="example-top"><div><div class="hindi">${esc(hi)}</div>${state.settings.transliteration?`<div class="translit">${esc(tr)}</div>`:''}<div class="note">${esc(de)}</div></div><button class="speak" data-speak="${esc(hi)}">🔊</button></div></div>`).join('');
   const quiz = lesson.quiz.map((q,qi) => `<div class="card" style="margin-top:10px"><strong>${qi+1}. ${esc(q.q)}</strong><div class="quiz" style="margin-top:10px">${q.options.map((o,oi)=>`<button class="option" data-quiz="${qi}" data-option="${oi}" data-answer="${q.answer}">${esc(o)}</button>`).join('')}</div></div>`).join('');
   const done = !!state.progress[id]?.completed;
+  const unit = course.units?.find(u => u.id === lesson.unit);
   layout(`<button class="back-btn" data-view="course">‹ Alle Lektionen</button>
-    <div class="detail-head"><div class="eyebrow">${id}</div><h2>${esc(lesson.title)}</h2><p>${esc(lesson.description)}</p></div>
+    <div class="detail-head"><div class="eyebrow">${unit ? esc(unit.title) + ' · ' : ''}${id}</div><h2>${esc(lesson.title)}</h2><p>${esc(lesson.description)}</p></div>
     <section class="content-block"><h3>1 · Grammatik verstehen</h3>${grammar}</section>
     <section class="card content-block"><h3>2 · Beispiele</h3>${examples}</section>
-    <section class="card content-block"><h3>3 · Dialog lesen</h3>${dialog}</section>
-    <section class="content-block"><h3>4 · Kurz prüfen</h3>${quiz}</section>
-    <section class="card content-block"><h3>5 · In die Wiederholung</h3><p>Zu dieser Lektion gehören ${cards.filter(c=>c.lessonId===id).length} SRS-Karten. Sie werden automatisch in „Wiederholen“ aufgenommen.</p>
+    ${reading ? reading.replace('<h3>', '<h3>3 · ') : ''}
+    <section class="card content-block"><h3>${reading ? '4' : '3'} · Dialog lesen</h3>${dialog}</section>
+    <section class="content-block"><h3>${reading ? '5' : '4'} · Kurz prüfen</h3>${quiz}</section>
+    <section class="card content-block"><h3>${reading ? '6' : '5'} · In die Wiederholung</h3><p>Zu dieser Lektion gehören ${cards.filter(c=>c.lessonId===id).length} SRS-Karten. Beim Üben werden bewertete Karten in deinen persönlichen Wiederholungsplan aufgenommen.</p>
       <div class="btn-row"><button class="btn btn-primary" data-action="lesson-review" data-lesson="${id}">Karten dieser Lektion üben</button><button class="btn ${done?'btn-secondary':'btn-ghost'}" data-action="complete-lesson" data-lesson="${id}">${done?'✓ Abgeschlossen':'Lektion abschließen'}</button></div>
     </section>`, { title: lesson.title, subtitle: id });
 }
 
 function buildReviewQueue(filterLesson = null, includeNotDue = false) {
   const pool = cards.filter(c => !filterLesson || c.lessonId === filterLesson);
-  const due = pool.filter(c => isDue(state.cardStates[c.id]));
+  if (filterLesson && includeNotDue) return [...pool].sort(() => Math.random() - 0.5);
+  const due = pool.filter(c => state.cardStates[c.id] && isDue(state.cardStates[c.id]));
   const queue = due.length ? due : (includeNotDue ? pool : []);
   return [...queue].sort(() => Math.random() - 0.5);
 }
@@ -271,9 +293,16 @@ function toast(message) {
 
 async function completeLesson(id) {
   state.progress[id] = { ...(state.progress[id] || {}), completed: true, completedAt: Date.now() };
+  for (const card of cards.filter(c => c.lessonId === id)) {
+    if (!state.cardStates[card.id]) state.cardStates[card.id] = freshCardState();
+  }
   updateStreak();
-  await Promise.all([dbSet('progress', state.progress), dbSet('stats', state.stats)]);
-  toast('Lektion abgeschlossen ✓');
+  await Promise.all([
+    dbSet('progress', state.progress),
+    dbSet('cardStates', state.cardStates),
+    dbSet('stats', state.stats)
+  ]);
+  toast('Lektion abgeschlossen · Karten zum SRS hinzugefügt ✓');
   renderLesson(id);
 }
 

@@ -8,7 +8,7 @@ Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgrup
 
 1. **Kein Framework und kein Build-System**, solange nicht ausdrücklich verlangt. Vanilla HTML/CSS/JavaScript behalten.
 2. **GitHub Pages muss direkt aus dem Repository funktionieren.** Alle URLs relativ halten (`./...`), damit der Repo-Unterpfad funktioniert.
-3. **Kursinhalt und App-Logik trennen.** Neue Lektionen/Karten primär in `data/content.js` ergänzen.
+3. **Kursinhalt und App-Logik trennen.** Bestehende L01–L08 bleiben unverändert in `data/content.js`; größere neue Module liegen in `data/units/`. `data/expanded-content.js` führt Basis und Erweiterung rückwärtskompatibel zusammen.
 4. **Bestehenden Lernstand niemals durch Content-Updates löschen.** SRS-Daten sind über stabile `card.id` verknüpft. IDs existierender Karten nicht ändern.
 5. **Keine Cloud, Accounts, Tracker oder externen APIs** ohne ausdrückliche Entscheidung.
 6. Persönliche Daten ausschließlich lokal speichern. Für Persistenz `db.js`/IndexedDB verwenden.
@@ -21,12 +21,16 @@ Eine kleine, robuste, installierbare Hindi-Lern-PWA für Apple-Geräte. Zielgrup
 
 ### Lektion
 
+`course.units[]` gruppiert Lektionen in Module.
+
 `course.lessons[]` enthält:
 - `id` — stabil, z. B. `L09`
 - `title`
 - `description`
+- `unit` — Modul-ID, z. B. `U3`
 - `grammar[]` mit `heading`, `text`
 - `examples[]`: `[deutsch, hindi, transliteration, note]`
+- `reading` — optionaler Mini-Lesetext mit `title`, `hindi`, `transliteration`, `german`
 - `dialog[]`: `[speaker, hindi, transliteration, deutsch]`
 - `quiz[]`: `{ q, options, answer }`
 
@@ -59,7 +63,7 @@ SRS-Zustand liegt getrennt in IndexedDB unter `cardStates[card.id]`.
 
 ## Vor jedem Push prüfen
 
-- `node --check app.js db.js srs.js data/content.js sw.js`
+- `node --check app.js db.js srs.js data/content.js data/expanded-content.js data/curriculum.js data/units/*.js sw.js`
 - App über HTTP öffnen.
 - Navigation: Heute → Kurs → Lektion → Wiederholen → Fortschritt → Einstellungen.
 - Eine Karte bewerten, Seite neu laden, prüfen ob SRS-Zustand bleibt.
