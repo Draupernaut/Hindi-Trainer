@@ -7,10 +7,12 @@ Eine statische, installierbare Progressive Web App (PWA) für strukturiertes Hin
 - 24 strukturierte Lektionen in 6 Modulen mit Grammatik, Beispielsätzen, Lesetexten und Dialogen
 - 240 SRS-Karten mit stabilen IDs (bestehender Lernstand bleibt updatefest)
 - eigenes Devanagari-Lesemodul mit Vokalen, Matras, Konsonanten und Zeichen
+- dedizierter **Devanagari-Schrifttrainer** mit Lernen, Erkennen, Nachzeichnen und freiem Schreiben
+- Touch-/Apple-Pencil-/Maus-Schreibfläche mit grober Formprüfung und lokal gespeichertem Schriftfortschritt
 - Deutsch ↔ Hindi mit Devanagari und optionaler Umschrift
 - Spaced Repetition mit **Nochmal / Schwer / Gut / Leicht**
 - lokaler Lernstand in IndexedDB
-- JSON-Backup und Wiederherstellung, z. B. über iCloud Drive
+- JSON-Backup und Wiederherstellung, z. B. über iCloud Drive; Schriftfortschritt wird automatisch mitgesichert
 - Offline-Nutzung über Service Worker
 - Hindi-Sprachausgabe über die Systemstimme, falls `hi-IN` verfügbar ist
 - auswählbare Kartenrichtung und Sprecher-Geschlecht für ausgewählte Formen
@@ -37,7 +39,11 @@ Danach `http://localhost:8000` öffnen.
 - `index.html` – App-Shell
 - `styles.css` – responsive iOS-orientierte Basisoberfläche
 - `course.css` – Modul- und Lesetextdarstellung
+- `india-theme.css` – Indien-inspiriertes Farbsystem und UI-Polish
 - `app.js` – Navigation, Rendering, Lernfluss, Backup, TTS
+- `quality.js` – aktive Schreibübungen und Lesetext-Qualitätsfunktionen
+- `script-trainer.js` – Devanagari-Schriftcurriculum, Erkennungsquiz, Canvas-Zeichnen und Fortschritt
+- `script-trainer.css` – Oberfläche des Schrifttrainers
 - `db.js` – IndexedDB-Abstraktion
 - `srs.js` – SRS-Planung
 - `data/content.js` – stabiler Basiskurs L01–L08
