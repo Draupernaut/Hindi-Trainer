@@ -25,8 +25,8 @@ function showToast(message) {
 }
 
 function getScriptTrainerText(button) {
-  const modal = button.closest('.script-modal');
-  const target = modal?.querySelector('.script-target-mini .dev, .script-big-glyph');
+  const overlay = button.closest('.script-overlay');
+  const target = overlay?.querySelector('.script-target-mini .dev, .script-big-glyph');
   return target?.textContent?.trim() || '';
 }
 
@@ -39,8 +39,6 @@ function speakHindi(text) {
   const clean = String(text || '').trim();
   if (!clean) return;
 
-  // Safari/iOS can become silent when cancel() is immediately followed by speak().
-  // Only cancel an actually active queue and give WebKit a tiny reset window.
   const now = Date.now();
   const needsReset = synth.speaking || synth.pending || (now - lastRequest < 120);
   lastRequest = now;
@@ -49,7 +47,7 @@ function speakHindi(text) {
     try {
       synth.resume?.();
       const utter = new SpeechSynthesisUtterance(clean);
-      activeUtterance = utter; // keep a strong reference for Safari
+      activeUtterance = utter;
       utter.lang = 'hi-IN';
       utter.rate = 0.82;
       utter.pitch = 1;
@@ -85,13 +83,9 @@ function speakHindi(text) {
 
 if (synth) {
   refreshVoices();
-  if ('onvoiceschanged' in synth) {
-    synth.addEventListener?.('voiceschanged', refreshVoices);
-    synth.onvoiceschanged = refreshVoices;
-  }
+  synth.addEventListener?.('voiceschanged', refreshVoices);
 }
 
-// Capture before the older per-button handlers so every speaker button uses one robust path.
 document.addEventListener('click', event => {
   const button = event.target.closest?.('[data-speak], [data-script-speak]');
   if (!button) return;
