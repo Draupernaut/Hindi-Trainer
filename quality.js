@@ -3,8 +3,9 @@ import { dbGet, dbSet } from './db.js';
 
 const app = document.querySelector('#app');
 const revealedReadings = new Set();
-let exerciseStats = await dbGet('exerciseStats', {});
+let exerciseStats = {};
 let enhancementScheduled = false;
+let observer = null;
 
 function esc(value = '') {
   return String(value).replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
@@ -177,6 +178,16 @@ function scheduleEnhancement() {
   });
 }
 
-const observer = new MutationObserver(scheduleEnhancement);
-observer.observe(app, { childList: true, subtree: true });
-scheduleEnhancement();
+async function initQuality() {
+  try {
+    exerciseStats = await dbGet('exerciseStats', {});
+  } catch (error) {
+    console.warn('Quality stats unavailable', error);
+    exerciseStats = {};
+  }
+  observer = new MutationObserver(scheduleEnhancement);
+  observer.observe(app, { childList: true, subtree: true });
+  scheduleEnhancement();
+}
+
+initQuality();
